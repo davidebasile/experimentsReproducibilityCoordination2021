@@ -1,0 +1,19 @@
+Rank: 1
+Initial state: [0]
+Final states: [[0, 8, 14]]
+Transitions: 
+([12],[!nobook],[13])
+([6],[?reject],[12])
+([3],[?ans],[5])
+([9],[!nobook],[8])
+([7],[!book],[9])
+([14],[!nobook],[14])
+([5],[!check],[10])
+([8],[!nobook],[8])
+([0],[?contact],[1])
+([10],[?ans],[11])
+([11],[!check],[10])
+([13],[!nobook],[14])
+([11],[!bestoffer],[6])
+([6],[?accept],[7])
+([1],[!check],[3])
