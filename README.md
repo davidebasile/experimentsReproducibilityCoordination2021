@@ -1,4 +1,4 @@
-[![Build Status](https://app.travis-ci.com/davidebasile/experimentsReproducibilityCoordination2021.svg?branch=master)](https://app.travis-ci.com/davidebasile/experimentsReproducibilityCoordination2021.svg?branch=master)
+[![Build Status](https://app.travis-ci.com/davidebasile/experimentsReproducibilityCoordination2021.svg?branch=master)](https://app.travis-ci.com/davidebasile/experimentsReproducibilityCoordination2021)
 
 
 # Experiments Reproducibility of Coordination2021
