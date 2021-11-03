@@ -29,6 +29,8 @@ public class App
     	String dir = System.getProperty("user.dir")+File.separator+"resources"+File.separator;
     	MSCAConverter dmc = new DataConverter();
     	
+
+    	System.out.println("Starting the experiments published at Coordination 2021:");
     	System.out.println("Importing the automata...");
     	MSCA client = dmc.importMSCA(dir+"Client.data");
     	MSCA priviledgedClient = dmc.importMSCA(dir+"PriviledgedClient.data");
@@ -67,6 +69,8 @@ public class App
     	dmc.exportMSCA(dir+"Orc_A1.data", orc_a1);
     	dmc.exportMSCA(dir+"Chor_A2.data", chor_a2);
 
+
+		System.out.println("Experiments terminated.");
     }
     
 
