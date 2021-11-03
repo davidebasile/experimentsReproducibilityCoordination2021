@@ -1,3 +1,6 @@
+[![Build Status](https://app.travis-ci.com/davidebasile/experimentsReproducibilityCoordination2021.svg?branch=master)](https://app.travis-ci.com/davidebasile/experimentsReproducibilityCoordination2021.svg?branch=master)
+
+
 # Experiments Reproducibility of Coordination2021
 
 This repository contains the source code of a simple application for reproducing the data of the experiments published at 
