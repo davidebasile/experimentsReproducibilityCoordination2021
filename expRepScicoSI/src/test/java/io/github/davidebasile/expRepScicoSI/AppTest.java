@@ -29,10 +29,12 @@ public class AppTest
     }
 
     /**
-     * Rigourous Test :-)
+     * 
+     * @throws Exception 
      */
-    public void testApp()
+    public void testExecuteExperiments() throws Exception
     {
-        assertTrue( true );
+    	App.main(null);
+    	assert(true);
     }
 }

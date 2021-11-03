@@ -10,6 +10,16 @@
 
 	<name>expRepScicoSI</name>
 	<url>http://maven.apache.org</url>
+	
+	<developers>
+		<developer>
+			<name>Davide Basile</name>
+			<email>davide.basile@isti.cnr.it</email>
+			<organization>ISTI CNR</organization>
+			<organizationUrl>https://www.isti.cnr.it/</organizationUrl>
+		</developer>
+	</developers>
+	
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -28,4 +38,56 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<testSourceDirectory>test</testSourceDirectory>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>0.8.7</version>
+					<configuration>
+						<excludes>
+							<exclude>test/*</exclude>
+						</excludes>
+					</configuration>
+					<executions>
+						<execution>
+							<id>default-prepare-agent</id>
+							<goals>
+								<goal>prepare-agent</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>default-report</id>
+							<goals>
+								<goal>report</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>default-check</id>
+							<goals>
+								<goal>check</goal>
+							</goals>
+							<configuration>
+								<rules>
+									<rule>
+										<element>BUNDLE</element>
+										<limits>
+											<limit>
+												<counter>COMPLEXITY</counter>
+												<value>COVEREDRATIO</value>
+												<minimum>0.60</minimum>
+											</limit>
+										</limits>
+									</rule>
+								</rules>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 </project>
