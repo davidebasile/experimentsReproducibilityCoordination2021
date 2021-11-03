@@ -7,11 +7,7 @@ import org.junit.Test;
  */
 public class AppTest  
 {
-  
-    /**
-     * 
-     * @throws Exception 
-     */
+ 
     @Test
     public void testExecuteExperiments() throws Exception
     {
