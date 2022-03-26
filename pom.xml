@@ -35,9 +35,9 @@
 			<version>4.13.2</version>
 		</dependency>
 		<dependency>
-			<groupId>io.github.davidebasile</groupId>
-			<artifactId>ContractAutomataLib</artifactId>
-			<version>0.0.1</version>
+			<groupId>io.github.contractautomata</groupId>
+			<artifactId>catlib</artifactId>
+			<version>1.0.0</version>
 		</dependency>
 		
 	</dependencies>
