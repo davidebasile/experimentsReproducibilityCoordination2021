@@ -46,13 +46,12 @@ public class App
     {	
 
     	System.out.println("Starting the experiments published at Coordination 2021:");
-    	oldVersion();
     	newVersion();
+    	oldVersion();
 		System.out.println("Experiments terminated.");
     }
     
     private static void oldVersion() {
-
     	System.out.println("The old version of the library, prior to its refactoring, is used. This will take longer...");
     	System.out.println("Importing the automata...");
     	
@@ -65,40 +64,55 @@ public class App
     	FMCA hotel = FMCA.importFromXML(dir2+"Hotel.mxe");
     	FMCA priviledgedHotel = FMCA.importFromXML(dir2+"PriviledgedHotel.mxe");
     	
+    	System.out.println("Computing the compositions...");
+    	
     	CA[] arr = new CA[] {client, client, broker, hotel, priviledgedHotel};
     	start = Instant.now();
-    	FMCA a1 = (FMCA) CAUtil.composition(arr);
+//    	FMCA a1 = (FMCA) 
+    			CAUtil.composition(arr);
 		stop = Instant.now();
 		elapsedTime = Duration.between(start, stop).toMillis();
 		System.out.println("Computing the composition A1 in : " +elapsedTime + " milliseconds");
-		
 
     	CA[] arr2 = new CA[] {client, priviledgedClient, broker, hotel, hotel};
     	start = Instant.now();
-    	FMCA a2 = (FMCA) CAUtil.composition(arr2);
+//    	FMCA a2 = (FMCA) 
+    			CAUtil.composition(arr2);
 		stop = Instant.now();
 		elapsedTime = Duration.between(start, stop).toMillis();
 		System.out.println("Computing the composition A2 in : " +elapsedTime + " milliseconds");
 
-    	a1 = FMCA.importFromXML(dir2 + "(ClientxClientxBrokerxHotelxPriviledgedHotel).mxe");
-    	System.out.println("Computing the orchestration of A1 (it will need around 10 minutes)..");
+    	
+    	Thread keepTravisAlive = new Thread( () ->{
+    			try {
+					while(true) {
+						Thread.sleep(60000);
+						System.out.print("...");
+					}
+					
+				} catch (InterruptedException e) {}
+    	});
+    	keepTravisAlive.start();
+    	
+    	FMCA a1 = FMCA.importFromXML(dir2 + "(ClientxClientxBrokerxHotelxPriviledgedHotel).mxe");
+    	System.out.println(System.lineSeparator()+"Computing the orchestration of A1, this will take several minutes...");
 		start = Instant.now();
 		FMCA a1_orc = a1.mpc(new Product(new String[0], new String[0]));		
 		stop = Instant.now();
 		elapsedTime = Duration.between(start, stop).toMillis();
-		System.out.println("The orchestration of A1 has  been computed in : " +elapsedTime + " milliseconds");
-		
+		System.out.println(System.lineSeparator()+"The orchestration of A1 has  been computed in : " +elapsedTime + " milliseconds");
 
-		a2 = FMCA.importFromXML(dir2 + "(ClientxPriviledgedClientxBrokerxHotelxHotel).mxe");
-    	System.out.println("Computing the choreography of A2 (it will need around 8 minutes).");
+		FMCA a2 = FMCA.importFromXML(dir2 + "(ClientxPriviledgedClientxBrokerxHotelxHotel).mxe");
+    	System.out.println(System.lineSeparator()+"Computing the choreography of A2, this will take several minutes...");
 		start = Instant.now();
 		FMCA a2_chor = a2.choreography();
 		stop = Instant.now();
 		elapsedTime = Duration.between(start, stop).toMillis();
-		System.out.println("The choreography of A2 has been computed in : " +elapsedTime + " milliseconds");
+		System.out.println("System.lineSeparator()+The choreography of A2 has been computed in : " +elapsedTime + " milliseconds");
 		
-
-		System.out.println("Exporting the synthesised orchestration and choreography...");
+		keepTravisAlive.interrupt();
+		
+		System.out.println(System.lineSeparator()+"Exporting the synthesised orchestration and choreography...");
 
 		a1_orc.printToFile(dir+"Orc_A1_old.data");
 		a2_chor.printToFile(dir+"Chor_A2_old.data");
