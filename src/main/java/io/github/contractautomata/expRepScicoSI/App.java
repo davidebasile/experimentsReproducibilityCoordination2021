@@ -46,9 +46,22 @@ public class App
     {	
 
     	System.out.println("Starting the experiments published at Coordination 2021:");
+
+    	Thread keepAlive = new Thread( () ->{
+    			try {
+					while(true) {
+						System.out.println("...");
+						Thread.sleep(60000);
+					}
+					
+				} catch (InterruptedException e) {}
+    	});
+    	keepAlive.start();
+    	
     	newVersion();
     	oldVersion();
 		System.out.println("Experiments terminated.");
+		keepAlive.interrupt();
     }
     
     private static void oldVersion() {
@@ -83,16 +96,6 @@ public class App
 		System.out.println("Computing the composition A2 in : " +elapsedTime + " milliseconds");
 
     	
-    	Thread keepTravisAlive = new Thread( () ->{
-    			try {
-					while(true) {
-						Thread.sleep(60000);
-						System.out.print("...");
-					}
-					
-				} catch (InterruptedException e) {}
-    	});
-    	keepTravisAlive.start();
     	
     	FMCA a1 = FMCA.importFromXML(dir2 + "(ClientxClientxBrokerxHotelxPriviledgedHotel).mxe");
     	System.out.println(System.lineSeparator()+"Computing the orchestration of A1, this will take several minutes...");
@@ -110,7 +113,6 @@ public class App
 		elapsedTime = Duration.between(start, stop).toMillis();
 		System.out.println("System.lineSeparator()+The choreography of A2 has been computed in : " +elapsedTime + " milliseconds");
 		
-		keepTravisAlive.interrupt();
 		
 		System.out.println(System.lineSeparator()+"Exporting the synthesised orchestration and choreography...");
 
