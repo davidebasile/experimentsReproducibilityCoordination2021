@@ -1,23 +1,28 @@
 package io.github.contractautomata.expRepScicoSI;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Arrays;
+import java.util.List;
+
+import CA.CA;
+import CA.CAUtil;
+import FMCA.FMCA;
+import FMCA.Product;
 import io.github.contractautomata.catlib.automaton.Automaton;
 import io.github.contractautomata.catlib.automaton.label.CALabel;
 import io.github.contractautomata.catlib.automaton.label.action.Action;
 import io.github.contractautomata.catlib.automaton.state.State;
 import io.github.contractautomata.catlib.automaton.transition.ModalTransition;
 import io.github.contractautomata.catlib.converters.AutDataConverter;
-import io.github.contractautomata.catlib.operators.ChoreographySynthesisOperator;
-import io.github.contractautomata.catlib.operators.MSCACompositionFunction;
-import io.github.contractautomata.catlib.operators.OrchestrationSynthesisOperator;
+import io.github.contractautomata.catlib.operations.ChoreographySynthesisOperator;
+import io.github.contractautomata.catlib.operations.MSCACompositionFunction;
+import io.github.contractautomata.catlib.operations.OrchestrationSynthesisOperator;
 import io.github.contractautomata.catlib.requirements.Agreement;
 import io.github.contractautomata.catlib.requirements.StrongAgreement;
-
-import java.io.File;
-import java.nio.file.Paths;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Class reproducing the experiments published at Coordination2021
@@ -28,15 +33,82 @@ import java.util.List;
  */
 public class App 
 {	
+	private static String dir = Paths.get(System.getProperty("user.dir")).getParent()
+			+File.separator+"experimentsReproducibilityCoordination2021"
+			+File.separator+"resources"+File.separator;
+
+	private static String dir2 = Paths.get(System.getProperty("user.dir")).getParent()
+			+File.separator+"experimentsReproducibilityCoordination2021"
+			+File.separator+"resources"
+			+File.separator+"demoLMCS2020"+File.separator;
+
     public static void main( String[] args ) throws Exception
-    {
-    	String dir = Paths.get(System.getProperty("user.dir")).getParent()
-				+File.separator+"experimentsReproducibilityCoordination2021"
-				+File.separator+"resources"+File.separator;
-		AutDataConverter<CALabel>  dmc = new AutDataConverter<>(CALabel::new);
-    	
+    {	
 
     	System.out.println("Starting the experiments published at Coordination 2021:");
+    	oldVersion();
+    	newVersion();
+		System.out.println("Experiments terminated.");
+    }
+    
+    private static void oldVersion() {
+
+    	System.out.println("The old version of the library, prior to its refactoring, is used. This will take longer...");
+    	System.out.println("Importing the automata...");
+    	
+    	Instant start, stop;
+    	long elapsedTime;
+    	
+    	FMCA client = FMCA.importFromXML(dir2+"Client.mxe");
+    	FMCA priviledgedClient = FMCA.importFromXML(dir2+"PriviledgedClient.mxe");
+    	FMCA broker = FMCA.importFromXML(dir2+"Broker.mxe");
+    	FMCA hotel = FMCA.importFromXML(dir2+"Hotel.mxe");
+    	FMCA priviledgedHotel = FMCA.importFromXML(dir2+"PriviledgedHotel.mxe");
+    	
+    	CA[] arr = new CA[] {client, client, broker, hotel, priviledgedHotel};
+    	start = Instant.now();
+    	FMCA a1 = (FMCA) CAUtil.composition(arr);
+		stop = Instant.now();
+		elapsedTime = Duration.between(start, stop).toMillis();
+		System.out.println("Computing the composition A1 in : " +elapsedTime + " milliseconds");
+		
+
+    	CA[] arr2 = new CA[] {client, priviledgedClient, broker, hotel, hotel};
+    	start = Instant.now();
+    	FMCA a2 = (FMCA) CAUtil.composition(arr2);
+		stop = Instant.now();
+		elapsedTime = Duration.between(start, stop).toMillis();
+		System.out.println("Computing the composition A2 in : " +elapsedTime + " milliseconds");
+
+    	a1 = FMCA.importFromXML(dir2 + "(ClientxClientxBrokerxHotelxPriviledgedHotel).mxe");
+    	System.out.println("Computing the orchestration of A1 (it will need around 10 minutes)..");
+		start = Instant.now();
+		FMCA a1_orc = a1.mpc(new Product(new String[0], new String[0]));		
+		stop = Instant.now();
+		elapsedTime = Duration.between(start, stop).toMillis();
+		System.out.println("The orchestration of A1 has  been computed in : " +elapsedTime + " milliseconds");
+		
+
+		a2 = FMCA.importFromXML(dir2 + "(ClientxPriviledgedClientxBrokerxHotelxHotel).mxe");
+    	System.out.println("Computing the choreography of A2 (it will need around 8 minutes).");
+		start = Instant.now();
+		FMCA a2_chor = a2.choreography();
+		stop = Instant.now();
+		elapsedTime = Duration.between(start, stop).toMillis();
+		System.out.println("The choreography of A2 has been computed in : " +elapsedTime + " milliseconds");
+		
+
+		System.out.println("Exporting the synthesised orchestration and choreography...");
+
+		a1_orc.printToFile(dir+"Orc_A1_old.data");
+		a2_chor.printToFile(dir+"Chor_A2_old.data");
+    }
+    
+    private static void newVersion() throws IOException {
+
+		AutDataConverter<CALabel>  dmc = new AutDataConverter<>(CALabel::new);
+		
+    	System.out.println("The new version of the library is now used.");
     	System.out.println("Importing the automata...");
 		Automaton<String, Action, State<String>, ModalTransition<String,Action,State<String>,CALabel>>
   			client = dmc.importMSCA(dir+"Client.data");
@@ -85,9 +157,6 @@ public class App
 		System.out.println("Exporting the synthesised orchestration and choreography...");
     	dmc.exportMSCA(dir+"Orc_A1.data", orc_a1);
     	dmc.exportMSCA(dir+"Chor_A2.data", chor_a2);
-
-
-		System.out.println("Experiments terminated.");
     }
     
 
