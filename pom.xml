@@ -35,9 +35,9 @@
 			<version>4.13.2</version>
 		</dependency>
 		<dependency>
-			<groupId>io.github.contractautomata</groupId>
+			<groupId>io.github.contractautomataproject</groupId>
 			<artifactId>catlib</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1</version>
 		</dependency>
 		
 	</dependencies>
