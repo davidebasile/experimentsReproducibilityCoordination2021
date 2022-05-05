@@ -111,7 +111,7 @@ public class App
 		FMCA a2_chor = a2.choreography();
 		stop = Instant.now();
 		elapsedTime = Duration.between(start, stop).toMillis();
-		System.out.println("System.lineSeparator()+The choreography of A2 has been computed in : " +elapsedTime + " milliseconds");
+		System.out.println(System.lineSeparator()+"The choreography of A2 has been computed in : " +elapsedTime + " milliseconds");
 		
 		
 		System.out.println(System.lineSeparator()+"Exporting the synthesised orchestration and choreography...");
